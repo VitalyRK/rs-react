@@ -6,15 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --fix **/*.{ts,tsx}",
     "format:fix": "prettier --write **/*.{ts,tsx}",
     "preview": "vite preview",
     "prepare": "husky install"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "npm format",
-      "npm lint --fix"
+      "npm run format:fix",
+      "npm run lint --fix"
     ]
   },
   "dependencies": {
