@@ -1,7 +1,15 @@
 .search__bar {
   color: #fff;
+  position: relative;
   background-color: $primary-color-green;
   padding: 10px;
+
+  &__img {
+    position: absolute;
+    height: 200px;
+    left: 5%;
+    bottom: -230px;
+  }
 
   &__container {
     display: flex;
