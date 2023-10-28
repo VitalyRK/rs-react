@@ -1,5 +1,6 @@
 .character__box {
   display: flex;
+  align-items: center;
   flex-direction: column;
   padding: 20px 30px;
   background-color: $color-text-gray;
@@ -7,6 +8,12 @@
   border-radius: 10px;
   color: #fff;
   font-size: 22px;
+
+  &__img {
+    width: 100px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+  }
 
   &__name {
     text-align: center;

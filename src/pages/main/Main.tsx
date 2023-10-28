@@ -50,10 +50,14 @@ class Main extends Component {
     }
   }
 
+  handleStateChange = (data: ICharacter[]) => {
+    this.setState({ people: data });
+  };
+
   render() {
     return (
       <>
-        <SearchBar />
+        <SearchBar stateChange={this.handleStateChange} />
         {this.state.loading && (
           <img src={spinner} alt="Loading..." className="container" />
         )}

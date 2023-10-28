@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import styles from './index.module.scss';
 import { ICharacter } from '../../pages/main/Main';
+import vader from '../../assets/vader.avif';
 
 type CharacterCartProps = {
   character: ICharacter;
@@ -11,6 +12,9 @@ class CharacterCart extends Component<CharacterCartProps> {
     console.log(this.props.character);
     return (
       <div className={styles.character__box}>
+        {this.props.character.name === 'Darth Vader' && (
+          <img className={styles.character__box__img} src={vader} alt="vader" />
+        )}
         <h3 className={styles.character__box__name}>
           {this.props.character.name}
         </h3>

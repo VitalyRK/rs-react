@@ -2,12 +2,17 @@ import { Component } from 'react';
 import styles from './index.module.scss';
 import { findCharacter } from '../../api/getData';
 import img from '../../assets/img.png';
+import { ICharacter } from '../../pages/main/Main';
 
 export interface ISearchState {
   query: string | null;
 }
 
-class SearchBar extends Component {
+type SearchBarProps = {
+  stateChange: (data: ICharacter[]) => void;
+};
+
+class SearchBar extends Component<SearchBarProps> {
   state: ISearchState = {
     query: localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null,
   };
@@ -18,19 +23,29 @@ class SearchBar extends Component {
     });
   };
 
-  handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (this.state.query !== null) {
+  getData = async () => {
+    if (this.state.query !== null && this.state.query !== '') {
       localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', this.state.query);
     }
 
     if (this.state.query !== null) {
-      await findCharacter(this.state.query).then((data) =>
-        console.log(data.results)
-      );
+      await findCharacter(this.state.query).then((data) => {
+        this.props.stateChange(data.results);
+      });
     }
   };
+
+  handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    this.getData();
+  };
+
+  handlePress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      this.getData();
+    }
+  };
+
   render() {
     return (
       <>
@@ -46,10 +61,12 @@ class SearchBar extends Component {
                 placeholder="Search for the characters..."
                 required
                 onChange={this.handleQueryChange}
+                onKeyDown={this.handlePress}
               />
               <button
                 className={styles.search__bar__form__button}
                 onClick={this.handleClick}
+                type="submit"
               >
                 Clack!
               </button>
