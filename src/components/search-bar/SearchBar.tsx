@@ -9,7 +9,8 @@ export interface ISearchState {
 }
 
 type SearchBarProps = {
-  stateChange: (data: ICharacter[]) => void;
+  stateChange: (data: ICharacter[] | null) => void;
+  loading: (value: boolean) => void;
 };
 
 class SearchBar extends Component<SearchBarProps> {
@@ -29,8 +30,11 @@ class SearchBar extends Component<SearchBarProps> {
     }
 
     if (this.state.query !== null) {
+      this.props.stateChange(null);
+      this.props.loading(true);
       await findCharacter(this.state.query).then((data) => {
         this.props.stateChange(data.results);
+        this.props.loading(false);
       });
     }
   };
