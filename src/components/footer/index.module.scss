@@ -2,4 +2,19 @@
   margin: 10px;
   text-align: center;
   color: $color-text-gray;
+  &__btn {
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    font-size: 22px;
+    background-color: $primary-color-green;
+    color: aliceblue;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: #fff;
+      color: $color-text-gray;
+      cursor: pointer;
+      transform: scale(1.3);
+    }
+  }
 }
