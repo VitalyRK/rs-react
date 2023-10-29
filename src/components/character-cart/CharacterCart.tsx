@@ -9,7 +9,6 @@ type CharacterCartProps = {
 
 class CharacterCart extends Component<CharacterCartProps> {
   render() {
-    console.log(this.props.character);
     return (
       <div className={styles.character__box}>
         {this.props.character.name === 'Darth Vader' && (

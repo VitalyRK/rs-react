@@ -1,7 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 
 interface IErrorBoundaryProps {
-  children?: ReactNode;
+  children: ReactNode;
 }
 
 interface IErrorBoundaryState {
@@ -12,12 +12,13 @@ export default class ErrorBoundary extends Component<
   IErrorBoundaryProps,
   IErrorBoundaryState
 > {
-  public state: IErrorBoundaryState = {
-    hasError: false,
-  };
+  constructor(props: IErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.log('Uncaught error:', error, info);
+    console.error('Uncaught error: ', error, info);
 
     this.setState({ hasError: true });
   }
