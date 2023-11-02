@@ -1,33 +1,20 @@
-import { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 import styles from './index.module.scss';
+import GitHubSVG from './GitHubSVG';
 
-interface IState {
-  error: boolean;
-}
-class Footer extends Component {
-  state: IState = {
-    error: false,
-  };
-  handleTest = () => {
-    this.setState({
-      error: true,
-    });
-  };
-  render() {
-    if (this.state.error) {
-      throw new Error('Oops, something went wrong!');
-    }
-    return (
-      <footer className={styles.footer}>
-        <button className={styles.footer__btn} onClick={this.handleTest}>
-          TestErrorBoundary
-        </button>
-        <h1 className={styles.footer__title}>
-          “Your path you must decide.” &ndash; Yoda
-        </h1>
-      </footer>
-    );
-  }
+function Footer() {
+  return (
+    <footer className={styles.footer}>
+      <NavLink
+        className={styles.footer__link__github}
+        to={'https://github.com/VitalyRK'}
+        target="_blank"
+      >
+        <GitHubSVG />
+        <span>Visit My GitHub</span>
+      </NavLink>
+    </footer>
+  );
 }
 
 export default Footer;

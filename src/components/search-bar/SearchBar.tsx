@@ -1,89 +1,83 @@
-import { Component } from 'react';
 import styles from './index.module.scss';
-import { findCharacter } from '../../api/getData';
-import img from '../../assets/img.png';
-import { ICharacter } from '../../pages/main/Main';
-
-export interface ISearchState {
-  query: string | null;
-}
+import { ICharacter } from '../../helpers/Types';
+import { useState } from 'react';
+import { getCharacters } from '../../api/getData';
 
 type SearchBarProps = {
   stateChange: (data: ICharacter[] | null) => void;
   loading: (value: boolean) => void;
 };
 
-class SearchBar extends Component<SearchBarProps> {
-  state: ISearchState = {
-    query: localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null,
+function SearchBar(props: SearchBarProps) {
+  const [query, setQuery] = useState<null | string>(
+    localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null
+  );
+  console.log(query);
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
   };
 
-  handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      query: event.target.value,
-    });
-  };
-
-  getData = async () => {
-    if (this.state.query !== null && this.state.query !== '') {
-      localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', this.state.query);
+  const getData = async () => {
+    if (query !== null && query !== '') {
+      localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', query);
     }
 
-    if (this.state.query !== null) {
-      this.props.stateChange(null);
-      this.props.loading(true);
-      await findCharacter(this.state.query).then((data) => {
-        this.props.stateChange(data.results);
-        this.props.loading(false);
-      });
+    if (query !== null) {
+      props.stateChange(null);
+      props.loading(true);
+      await getCharacters(query)
+        .then((resp) => {
+          props.stateChange(resp.data);
+          props.loading(false);
+        })
+        .catch(() => {
+          props.stateChange(null);
+        });
     }
   };
 
-  handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    this.getData();
+    getData();
   };
 
-  handlePress = (event: React.KeyboardEvent) => {
+  const handlePress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
-      this.getData();
+      getData();
     }
   };
 
-  render() {
-    return (
-      <>
-        <section className={styles.search__bar}>
-          <div className={`container ${styles.search__bar__container}`}>
-            <h3 className={styles.search__bar__logo}>Best Logo</h3>
-            <div className={styles.search__bar__form}>
-              <input
-                type="text"
-                name="query"
-                defaultValue={this.state.query || ''}
-                className={styles.search__bar__form__input}
-                placeholder="Search for the characters..."
-                required
-                onChange={this.handleQueryChange}
-                onKeyDown={this.handlePress}
-              />
-              <button
-                className={styles.search__bar__form__button}
-                onClick={this.handleClick}
-                type="submit"
-              >
-                Clack!
-              </button>
-            </div>
+  return (
+    <>
+      <section className={styles.search__bar}>
+        <div className={`container ${styles.search__bar__container}`}>
+          <h3 className={styles.search__bar__logo}>Rick and Morty</h3>
+          <div className={styles.search__bar__form}>
+            <input
+              type="text"
+              name="query"
+              defaultValue={query || ''}
+              className={styles.search__bar__form__input}
+              placeholder="Search for the characters..."
+              required
+              onChange={handleQueryChange}
+              onKeyDown={handlePress}
+            />
+            <button
+              className={styles.search__bar__form__button}
+              onClick={handleClick}
+              type="submit"
+            >
+              Clack!
+            </button>
           </div>
-          <h4 className="container primary__title">
-            Search for a character by name
-          </h4>
-          <img className={styles.search__bar__img} src={img} alt="starWars" />
-        </section>
-      </>
-    );
-  }
+        </div>
+        <h4 className="container primary__title">
+          Search for a character by name
+        </h4>
+      </section>
+    </>
+  );
 }
 
 export default SearchBar;

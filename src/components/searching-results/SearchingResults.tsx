@@ -1,50 +1,41 @@
-import { Component } from 'react';
 import styles from './index.module.scss';
-import { ICharacter } from '../../pages/main/Main';
 import CharacterCart from '../character-cart/CharacterCart';
-import nothingFound from '../../assets/yoda.webp';
+import nothingFound from '../../assets/simpdons.svg';
+import { ICharacter } from '../../helpers/Types';
 
 type SearchProps = {
-  people: ICharacter[];
+  characters: ICharacter[];
 };
-class SearchingResults extends Component<SearchProps> {
-  state = {
-    query: localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null,
-  };
-
-  render() {
-    return (
-      <section className={styles.searching__results}>
-        <div className={`container ${styles.searching__results__container}`}>
-          <div className={styles.searching__results__box}>
-            {this.props.people.length === 0 ? (
-              <>
-                <img
-                  className={styles.searching__results__box__img}
-                  src={nothingFound}
-                  alt="nothing found"
-                />
-                <h3 className={styles.searching__results__box__title}>
-                  Oops... Nothing found.
-                </h3>
-                <img
-                  className={styles.searching__results__box__img}
-                  src={nothingFound}
-                  alt="nothing found"
-                />
-              </>
-            ) : (
-              this.props.people.map((character, id) => {
-                return (
-                  <CharacterCart key={`cart-${id}`} character={character} />
-                );
-              })
-            )}
-          </div>
+function SearchingResults(props: SearchProps) {
+  return (
+    <section className={styles.searching__results}>
+      <div className={`container ${styles.searching__results__container}`}>
+        <div className={styles.searching__results__box}>
+          {props.characters === undefined ? (
+            <>
+              <img
+                className={styles.searching__results__box__img}
+                src={nothingFound}
+                alt="nothing found"
+              />
+              <h3 className={styles.searching__results__box__title}>
+                Oops... Nothing found.
+              </h3>
+              <img
+                className={styles.searching__results__box__img}
+                src={nothingFound}
+                alt="nothing found"
+              />
+            </>
+          ) : (
+            props.characters.map((character, id) => {
+              return <CharacterCart key={`cart-${id}`} character={character} />;
+            })
+          )}
         </div>
-      </section>
-    );
-  }
+      </div>
+    </section>
+  );
 }
 
 export default SearchingResults;

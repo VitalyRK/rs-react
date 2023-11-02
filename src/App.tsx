@@ -1,16 +1,14 @@
-import { Component } from 'react';
-import Main from './pages/main/Main';
 import './styles/global.scss';
 import ErrorBoundary from './helpers/ErrorBoundary';
+import { RouterProvider } from 'react-router-dom';
+import router from './router/Router';
 
-class App extends Component {
-  render() {
-    return (
-      <ErrorBoundary>
-        <Main />
-      </ErrorBoundary>
-    );
-  }
+function App() {
+  return (
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  );
 }
 
 export default App;

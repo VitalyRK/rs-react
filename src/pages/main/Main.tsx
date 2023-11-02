@@ -1,80 +1,75 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import SearchBar from '../../components/search-bar/SearchBar';
 import SearchingResults from '../../components/searching-results/SearchingResults';
-import { findCharacter, getPeople } from '../../api/getData';
-import Footer from '../../components/footer/Footer';
 import spinner from '../../assets/spinner.gif';
+import { Outlet, useParams } from 'react-router-dom';
+import styles from './index.module.scss';
+import { ICharacter } from '../../helpers/Types';
+import { getCharacters } from '../../api/getData';
 
 export interface ISearchState {
   query: string | null;
   people: ICharacter[] | null;
   loading: boolean;
 }
-export interface ICharacter {
-  name: string;
-  height: string;
-  mass: string;
-  hair_color: string;
-  skin_color: string;
-  eye_color: string;
-  birth_year: string;
-  gender: string;
-  homeworld: string;
-  films: string[];
-  species: string[];
-  vehicles: string[];
-  starships: string[];
-  created: string;
-  edited: string;
-  url: string;
-}
 
-class Main extends Component {
-  state: ISearchState = {
-    query: localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null,
-    people: null,
-    loading: true,
-  };
+function Main() {
+  const query = localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null;
+  const [characters, setCharacters] = useState<ICharacter[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const params = useParams();
+  console.log(params);
 
-  async componentDidMount() {
-    if (this.state.query !== null) {
-      await findCharacter(this.state.query).then((data) => {
-        this.setState({ people: data.results });
-        this.setState({ loading: false });
-      });
+  useEffect(() => {
+    setLimit(20);
+    setPage(2);
+    if (query !== null) {
+      (async () => {
+        await getCharacters(query).then((resp) => {
+          setCharacters(resp.data);
+          setLoading(false);
+        });
+      })();
     } else {
-      await getPeople().then((data) => {
-        this.setState({ people: data.results });
-        this.setState({ loading: false });
-      });
+      (async () => {
+        await getCharacters().then((resp) => {
+          setCharacters(resp.data);
+          setLoading(false);
+        });
+      })();
     }
-  }
+  }, [query, page, limit]);
 
-  handleStateChange = (data: ICharacter[] | null) => {
-    this.setState({ people: data });
+  const handleStateChange = (data: ICharacter[] | null) => {
+    setCharacters(data);
   };
 
-  handleLoadingChange = (value: boolean) => {
-    this.setState({ loading: value });
+  const handleLoadingChange = (value: boolean) => {
+    setLoading(value);
   };
 
-  render() {
-    return (
-      <>
-        <SearchBar
-          loading={this.handleLoadingChange}
-          stateChange={this.handleStateChange}
-        />
-        {this.state.loading && (
-          <img src={spinner} alt="Loading..." className="container" />
+  return (
+    <>
+      <SearchBar
+        loading={handleLoadingChange}
+        stateChange={handleStateChange}
+      />
+      <div className={`container ${styles.main__container}`}>
+        {loading ? (
+          <img
+            style={{ margin: '200px auto' }}
+            src={spinner}
+            alt="Loading..."
+          />
+        ) : (
+          characters !== null && <SearchingResults characters={characters} />
         )}
-        {this.state.people !== null && (
-          <SearchingResults people={this.state.people} />
-        )}
-        <Footer />
-      </>
-    );
-  }
+        <Outlet />
+      </div>
+    </>
+  );
 }
 
 export default Main;
