@@ -2,29 +2,34 @@ import styles from './index.module.scss';
 import { ICharacter } from '../../helpers/Types';
 import { useState } from 'react';
 import { getCharacters } from '../../api/getData';
+import { NavLink } from 'react-router-dom';
+import LimitElement from './LimitElement';
 
 type SearchBarProps = {
   stateChange: (data: ICharacter[] | null) => void;
+  stateLimit: (value: number) => void;
   loading: (value: boolean) => void;
+  handleInputValueChange: (value: string) => void;
+  queryUrl: string | null;
 };
 
 function SearchBar(props: SearchBarProps) {
   const [query, setQuery] = useState<null | string>(
-    localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null
+    props.queryUrl || localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null
   );
-  console.log(query);
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
 
   const getData = async () => {
-    if (query !== null && query !== '') {
+    if (query !== null) {
       localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', query);
     }
 
     if (query !== null) {
       props.stateChange(null);
       props.loading(true);
+      props.handleInputValueChange(query);
       await getCharacters(query)
         .then((resp) => {
           props.stateChange(resp.data);
@@ -51,7 +56,9 @@ function SearchBar(props: SearchBarProps) {
     <>
       <section className={styles.search__bar}>
         <div className={`container ${styles.search__bar__container}`}>
-          <h3 className={styles.search__bar__logo}>Rick and Morty</h3>
+          <NavLink target="_blank" to={'https://jikan.moe/'}>
+            <h3 className={styles.search__bar__logo}>Jikan API</h3>
+          </NavLink>
           <div className={styles.search__bar__form}>
             <input
               type="text"
@@ -72,9 +79,10 @@ function SearchBar(props: SearchBarProps) {
             </button>
           </div>
         </div>
-        <h4 className="container primary__title">
-          Search for a character by name
-        </h4>
+        <div className={`container ${styles.search__bar__container}`}>
+          <h4 className="primary__title">Search for a character by name</h4>
+          <LimitElement stateLimit={props.stateLimit} />
+        </div>
       </section>
     </>
   );

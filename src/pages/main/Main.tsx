@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import SearchBar from '../../components/search-bar/SearchBar';
 import SearchingResults from '../../components/searching-results/SearchingResults';
 import spinner from '../../assets/spinner.gif';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
 import styles from './index.module.scss';
-import { ICharacter } from '../../helpers/Types';
+import { ICharacter, IPagination, IPaginationProps } from '../../helpers/Types';
 import { getCharacters } from '../../api/getData';
 
 export interface ISearchState {
@@ -14,33 +14,84 @@ export interface ISearchState {
 }
 
 function Main() {
-  const query = localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null;
+  const queryLocal = localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null;
+
+  const location = useLocation();
+  const locationPath = location.pathname.split('/').includes('detail');
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryUrl = searchParams.get('q');
+  // const limitUrl = Number(searchParams.get('limit'));
+  // const pageUrl = Number(searchParams.get('page'));
+  // const [query, setQuery] = useState('');
+  const [limit, setLimit] = useState(Number(searchParams.get('limit')) || 10);
+  const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
   const [characters, setCharacters] = useState<ICharacter[] | null>(null);
+  const [paginationData, setPaginationData] = useState<IPagination | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
-  const params = useParams();
-  console.log(params);
+
+  const paginatiomParams: IPaginationProps | null = paginationData && {
+    nav: {
+      current: page,
+      totalPages: Number(paginationData.last_visible_page),
+    },
+    disable: {
+      right: !paginationData.has_next_page,
+      left: page === 1,
+    },
+    onPageClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+      setPage(Number(e.currentTarget.value));
+    },
+    onNextPageClick: () => {
+      setPage(page + 1);
+    },
+    onPrevPageClick: () => {
+      setPage(page - 1);
+    },
+  };
 
   useEffect(() => {
-    setLimit(20);
-    setPage(2);
-    if (query !== null) {
-      (async () => {
-        await getCharacters(query).then((resp) => {
-          setCharacters(resp.data);
-          setLoading(false);
+    let query = '';
+    if (queryUrl !== null) {
+      query = queryUrl;
+      setSearchParams({
+        q: queryUrl,
+        limit: limit.toString(),
+        page: page.toString(),
+      });
+    } else if (queryLocal !== null) {
+      query = queryLocal;
+      if (queryLocal === '') {
+        setSearchParams({
+          limit: limit.toString(),
+          page: page.toString(),
         });
-      })();
+      } else {
+        setSearchParams({
+          q: queryLocal,
+          limit: limit.toString(),
+          page: page.toString(),
+        });
+      }
     } else {
-      (async () => {
-        await getCharacters().then((resp) => {
-          setCharacters(resp.data);
-          setLoading(false);
-        });
-      })();
+      setSearchParams({
+        limit: limit.toString(),
+        page: page.toString(),
+      });
     }
-  }, [query, page, limit]);
+    (async () => {
+      setLoading(true);
+      setCharacters(null);
+      setPaginationData(null);
+      await getCharacters(query, limit, page).then((resp) => {
+        setCharacters(resp.data);
+        setPaginationData(resp.pagination);
+        setLoading(false);
+      });
+    })();
+  }, [queryUrl, queryLocal, page, limit]);
 
   const handleStateChange = (data: ICharacter[] | null) => {
     setCharacters(data);
@@ -50,11 +101,24 @@ function Main() {
     setLoading(value);
   };
 
+  const handleInputValueChange = (value: string) => {
+    setSearchParams({ q: value });
+    setPage(1);
+  };
+
+  const handleLimitChange = (value: number) => {
+    setLimit(value);
+    setPage(1);
+  };
+
   return (
     <>
       <SearchBar
         loading={handleLoadingChange}
         stateChange={handleStateChange}
+        stateLimit={handleLimitChange}
+        handleInputValueChange={handleInputValueChange}
+        queryUrl={queryUrl}
       />
       <div className={`container ${styles.main__container}`}>
         {loading ? (
@@ -64,9 +128,17 @@ function Main() {
             alt="Loading..."
           />
         ) : (
-          characters !== null && <SearchingResults characters={characters} />
+          characters !== null &&
+          paginationData !== null &&
+          paginatiomParams !== null && (
+            <SearchingResults
+              paginationData={paginationData}
+              characters={characters}
+              paginatiomParams={paginatiomParams}
+            />
+          )
         )}
-        <Outlet />
+        {locationPath && <Outlet />}
       </div>
     </>
   );
