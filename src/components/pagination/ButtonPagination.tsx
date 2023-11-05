@@ -1,15 +1,16 @@
 import { useState } from 'react';
 
-interface IButtonPaginationProps {
+type ButtonPaginationProps = {
   value: number | string;
   active?: boolean;
   inActive?: boolean;
   handleControlToPage?: () => void;
   handleClickToPage?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-}
+};
 
-function ButtonPagination(props: IButtonPaginationProps) {
+function ButtonPagination(props: ButtonPaginationProps) {
   const [isHover, setIsHover] = useState(false);
+
   const handleMouseEnter = () => {
     setIsHover(true);
   };
@@ -17,6 +18,7 @@ function ButtonPagination(props: IButtonPaginationProps) {
   const handleMouseLeave = () => {
     setIsHover(false);
   };
+
   return (
     <button
       style={{

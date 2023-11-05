@@ -1,9 +1,4 @@
-import {
-  NavLink,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import styles from './index.module.scss';
 import { useEffect, useState } from 'react';
 import { getCharacterById } from '../../api/getData';
@@ -16,7 +11,6 @@ function DetailPage() {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigate();
   const [character, setCharacter] = useState<ICharacter | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setLoading(true);
@@ -34,7 +28,7 @@ function DetailPage() {
     } else {
       navigation('/404');
     }
-  }, [navigation, params, searchParams, setSearchParams]);
+  }, [navigation, params]);
 
   return (
     <div className={styles.detail__page}>

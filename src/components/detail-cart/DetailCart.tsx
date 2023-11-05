@@ -2,11 +2,11 @@ import { NavLink } from 'react-router-dom';
 import styles from './index.module.scss';
 import { ICharacter } from '../../helpers/Types';
 
-interface IDetailCartProps {
+type DetailCartProps = {
   character: ICharacter;
-}
+};
 
-function DetailCart(props: IDetailCartProps) {
+function DetailCart(props: DetailCartProps) {
   return (
     <>
       <div className={styles.detail__page__box}>

@@ -21,9 +21,7 @@ function Main() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const queryUrl = searchParams.get('q');
-  // const limitUrl = Number(searchParams.get('limit'));
-  // const pageUrl = Number(searchParams.get('page'));
-  // const [query, setQuery] = useState('');
+
   const [limit, setLimit] = useState(Number(searchParams.get('limit')) || 10);
   const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
   const [characters, setCharacters] = useState<ICharacter[] | null>(null);
@@ -31,6 +29,7 @@ function Main() {
     null
   );
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const paginatiomParams: IPaginationProps | null = paginationData && {
     nav: {
@@ -83,15 +82,32 @@ function Main() {
     }
     (async () => {
       setLoading(true);
+      setError(null);
       setCharacters(null);
       setPaginationData(null);
-      await getCharacters(query, limit, page).then((resp) => {
-        setCharacters(resp.data);
-        setPaginationData(resp.pagination);
-        setLoading(false);
-      });
+      await getCharacters(query, limit, page)
+        .then((resp) => {
+          if (resp.status === '429') {
+            setLoading(false);
+            setError('Too many requests in a short period of time');
+            console.log(error);
+            throw new Error(resp.message);
+          }
+          if (resp.status === 500) {
+            setLoading(false);
+            setError('Search term too short!');
+            throw new Error(resp.message);
+          }
+          console.log(resp);
+          setCharacters(resp.data);
+          setPaginationData(resp.pagination);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     })();
-  }, [queryUrl, queryLocal, page, limit]);
+  }, [queryUrl, queryLocal, page, limit, setSearchParams]);
 
   const handleStateChange = (data: ICharacter[] | null) => {
     setCharacters(data);
@@ -120,6 +136,8 @@ function Main() {
         handleInputValueChange={handleInputValueChange}
         queryUrl={queryUrl}
       />
+      {error && <h3>{error}</h3>}
+
       <div className={`container ${styles.main__container}`}>
         {loading ? (
           <img

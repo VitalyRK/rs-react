@@ -17,6 +17,7 @@ function SearchBar(props: SearchBarProps) {
   const [query, setQuery] = useState<null | string>(
     props.queryUrl || localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null
   );
+
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
@@ -57,7 +58,7 @@ function SearchBar(props: SearchBarProps) {
       <section className={styles.search__bar}>
         <div className={`container ${styles.search__bar__container}`}>
           <NavLink target="_blank" to={'https://jikan.moe/'}>
-            <h3 className={styles.search__bar__logo}>Jikan API</h3>
+            <h1 className={styles.search__bar__logo}>Jikan API</h1>
           </NavLink>
           <div className={styles.search__bar__form}>
             <input

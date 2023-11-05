@@ -9,6 +9,7 @@ type SearchProps = {
   paginationData: IPagination;
   paginatiomParams: IPaginationProps;
 };
+
 function SearchingResults(props: SearchProps) {
   return (
     <section className={styles.searching__results}>

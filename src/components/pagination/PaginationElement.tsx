@@ -1,33 +1,11 @@
 import { IPaginationProps } from '../../helpers/Types';
 import ButtonPagination from './ButtonPagination';
+import { getArrayValuesForPagination } from './LogicOfProcessingData';
 import styles from './index.module.scss';
 
 type PaginationElementProps = {
   paginatiomParams: IPaginationProps;
 };
-
-function getArrayValuesForPagination(
-  totalPages: number,
-  currentPage: number
-): string[] {
-  const result: string[] = [];
-  if (totalPages <= 5) {
-    for (let i = 1; i <= totalPages; i++) {
-      result.push(i.toString());
-    }
-    return result;
-  }
-  if (currentPage <= 5) {
-    for (let i = 1; i <= 5; i++) {
-      result.push(i.toString());
-    }
-    totalPages === 6
-      ? result.push(totalPages.toString())
-      : result.push('...', totalPages.toString());
-  }
-  if (currentPage + 1 === totalPages) result.splice(result.indexOf('...'), 1);
-  return result;
-}
 
 function PaginationElement(props: PaginationElementProps) {
   const arrayButtons = getArrayValuesForPagination(
@@ -50,6 +28,15 @@ function PaginationElement(props: PaginationElementProps) {
               value={value}
               handleClickToPage={props.paginatiomParams.onPageClick}
               active
+            />
+          );
+        } else if (value === '...') {
+          return (
+            <ButtonPagination
+              key={`id-btn-${id}`}
+              value={value}
+              handleClickToPage={props.paginatiomParams.onPageClick}
+              inActive
             />
           );
         }
