@@ -1,10 +1,11 @@
-type LimitElementProps = {
-  stateLimit: (value: number) => void;
-};
+import { useContext } from 'react';
+import { AppContext } from '../../providers/AppProvider';
 
-function LimitElement(props: LimitElementProps) {
+function LimitElement() {
+  const { setPage, setLimit } = useContext(AppContext);
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    props.stateLimit(+event.target.value);
+    setLimit(+event.target.value);
+    setPage(1);
   };
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

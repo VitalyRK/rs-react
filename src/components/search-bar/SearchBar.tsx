@@ -1,46 +1,33 @@
 import styles from './index.module.scss';
-import { ICharacter } from '../../helpers/Types';
-import { useState } from 'react';
-import { getCharacters } from '../../api/getData';
-import { NavLink } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import LimitElement from './LimitElement';
+import { AppContext } from '../../providers/AppProvider';
 
-type SearchBarProps = {
-  stateChange: (data: ICharacter[] | null) => void;
-  stateLimit: (value: number) => void;
-  loading: (value: boolean) => void;
-  handleInputValueChange: (value: string) => void;
-  queryUrl: string | null;
-};
-
-function SearchBar(props: SearchBarProps) {
-  const [query, setQuery] = useState<null | string>(
-    props.queryUrl || localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || null
-  );
+function SearchBar() {
+  const { query, setQuery, setLoading, setPage, setCharacters } =
+    useContext(AppContext);
+  const [queryInput, setQueryInput] = useState<string | null>(query);
+  const [, setSearchParams] = useSearchParams();
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
+    setQueryInput(event.target.value);
   };
 
   const getData = async () => {
-    if (query !== null) {
-      localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', query);
-    }
-
-    if (query !== null) {
-      props.stateChange(null);
-      props.loading(true);
-      props.handleInputValueChange(query);
-      await getCharacters(query)
-        .then((resp) => {
-          props.stateChange(resp.data);
-          props.loading(false);
-        })
-        .catch(() => {
-          props.stateChange(null);
-        });
+    if (queryInput !== null) {
+      localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', queryInput);
+      setCharacters(null);
+      setLoading(true);
+      setQuery(queryInput);
+      setSearchParams({ q: queryInput });
+      setPage(1);
     }
   };
+
+  useEffect(() => {
+    setQueryInput(query);
+  }, [query]);
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -63,7 +50,7 @@ function SearchBar(props: SearchBarProps) {
           <div className={styles.search__bar__form}>
             <input
               type="text"
-              name="query"
+              name="queryInput"
               defaultValue={query || ''}
               className={styles.search__bar__form__input}
               placeholder="Search for the characters..."
@@ -82,7 +69,7 @@ function SearchBar(props: SearchBarProps) {
         </div>
         <div className={`container ${styles.search__bar__container}`}>
           <h4 className="primary__title">Search for a character by name</h4>
-          <LimitElement stateLimit={props.stateLimit} />
+          <LimitElement />
         </div>
       </section>
     </>

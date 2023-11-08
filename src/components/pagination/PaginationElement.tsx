@@ -1,58 +1,67 @@
-import { IPaginationProps } from '../../helpers/Types';
+import { useContext } from 'react';
+import { AppContext } from '../../providers/AppProvider';
 import ButtonPagination from './ButtonPagination';
 import { getArrayValuesForPagination } from './LogicOfProcessingData';
 import styles from './index.module.scss';
 
-type PaginationElementProps = {
-  paginatiomParams: IPaginationProps;
-};
+function PaginationElement() {
+  const { page, setPage, paginationData } = useContext(AppContext);
+  const arrayButtons =
+    paginationData &&
+    getArrayValuesForPagination(
+      paginationData.last_visible_page,
+      paginationData.current_page
+    );
 
-function PaginationElement(props: PaginationElementProps) {
-  const arrayButtons = getArrayValuesForPagination(
-    props.paginatiomParams.nav.totalPages,
-    props.paginatiomParams.nav.current
-  );
+  const onPageClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setPage(Number(e.currentTarget.value));
+  };
+
   return (
     <div className={styles.pagination__container}>
       <ButtonPagination
         value="&lt;"
-        inActive={props.paginatiomParams.disable.left}
-        handleControlToPage={props.paginatiomParams.onPrevPageClick}
+        inActive={page === 1}
+        handleControlToPage={() => {
+          setPage(page - 1);
+        }}
       />
 
-      {arrayButtons.map((value, id) => {
-        if (+value === props.paginatiomParams.nav.current) {
+      {arrayButtons &&
+        arrayButtons.map((value, id) => {
+          if (+value === paginationData.current_page) {
+            return (
+              <ButtonPagination
+                key={`id-btn-${id}`}
+                value={value}
+                handleClickToPage={onPageClick}
+                active
+              />
+            );
+          } else if (value === '...') {
+            return (
+              <ButtonPagination
+                key={`id-btn-${id}`}
+                value={value}
+                handleClickToPage={onPageClick}
+                inActive
+              />
+            );
+          }
           return (
             <ButtonPagination
               key={`id-btn-${id}`}
               value={value}
-              handleClickToPage={props.paginatiomParams.onPageClick}
-              active
+              handleClickToPage={onPageClick}
             />
           );
-        } else if (value === '...') {
-          return (
-            <ButtonPagination
-              key={`id-btn-${id}`}
-              value={value}
-              handleClickToPage={props.paginatiomParams.onPageClick}
-              inActive
-            />
-          );
-        }
-        return (
-          <ButtonPagination
-            key={`id-btn-${id}`}
-            value={value}
-            handleClickToPage={props.paginatiomParams.onPageClick}
-          />
-        );
-      })}
-      {/* <span className={styles.pagination__container__dots}>...</span> */}
+        })}
       <ButtonPagination
         value="&gt;"
-        inActive={props.paginatiomParams.disable.right}
-        handleControlToPage={props.paginatiomParams.onNextPageClick}
+        inActive={paginationData ? paginationData.has_next_page : true}
+        handleControlToPage={() => {
+          setPage(page + 1);
+        }}
       />
     </div>
   );

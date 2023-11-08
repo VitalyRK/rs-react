@@ -32,17 +32,3 @@ export interface ICharacter {
   favorites: number;
   about: string;
 }
-
-export interface IPaginationProps {
-  onPageClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onNextPageClick: () => void;
-  onPrevPageClick: () => void;
-  disable: {
-    left: boolean;
-    right: boolean;
-  };
-  nav: {
-    current: number;
-    totalPages: number;
-  };
-}
