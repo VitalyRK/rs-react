@@ -7,7 +7,9 @@ import { AppContext } from '../../providers/AppProvider';
 function SearchBar() {
   const { query, setQuery, setLoading, setPage, setCharacters } =
     useContext(AppContext);
-  const [queryInput, setQueryInput] = useState<string | null>(query);
+  const [queryInput, setQueryInput] = useState<string | null>(
+    localStorage.getItem('LOCAL_LAST_SEARCH_QUERY') || query
+  );
   const [, setSearchParams] = useSearchParams();
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,9 +51,10 @@ function SearchBar() {
           </NavLink>
           <div className={styles.search__bar__form}>
             <input
+              data-testid={'test-input'}
               type="text"
               name="queryInput"
-              defaultValue={query || ''}
+              defaultValue={queryInput || query || ''}
               className={styles.search__bar__form__input}
               placeholder="Search for the characters..."
               required
@@ -59,6 +62,7 @@ function SearchBar() {
               onKeyDown={handlePress}
             />
             <button
+              data-testid={'test-btn'}
               className={styles.search__bar__form__button}
               onClick={handleClick}
               type="submit"

@@ -60,20 +60,26 @@ function Main() {
       setPaginationData(null);
       await getCharacters(queryTemp, limit, page)
         .then((resp) => {
+          // if (!resp.ok) {
+          //   setLoading(false);
+          //   setError(resp.status);
+          //   console.log(error);
+          //   throw new Error(resp.message);
+          // }
+          setLoading(false);
+
           if (resp.status === '429') {
-            setLoading(false);
             setError('Too many requests in a short period of time');
-            console.log(error);
             throw new Error(resp.message);
-          }
-          if (resp.status === 500) {
+          } else if (resp.status === 500) {
             setLoading(false);
             setError('Search term too short!');
             throw new Error(resp.message);
+          } else {
+            setCharacters(resp.data);
+            setPaginationData(resp.pagination);
+            setLoading(false);
           }
-          setCharacters(resp.data);
-          setPaginationData(resp.pagination);
-          setLoading(false);
         })
         .catch((e) => {
           console.log(e);
@@ -84,20 +90,22 @@ function Main() {
   return (
     <>
       <SearchBar />
-      {error && <h3>{error}</h3>}
-
-      <div className={`container ${styles.main__container}`}>
-        {loading ? (
-          <img
-            style={{ margin: '200px auto' }}
-            src={spinner}
-            alt="Loading..."
-          />
-        ) : (
-          <SearchingResults />
-        )}
-        {locationPath && <Outlet />}
-      </div>
+      {error ? (
+        <h3 className={styles.main__container__error}>{error}</h3>
+      ) : (
+        <div className={`container ${styles.main__container}`}>
+          {loading ? (
+            <img
+              style={{ margin: '200px auto' }}
+              src={spinner}
+              alt="Loading..."
+            />
+          ) : (
+            <SearchingResults />
+          )}
+          {locationPath && <Outlet />}
+        </div>
+      )}
     </>
   );
 }

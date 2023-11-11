@@ -27,8 +27,8 @@ export interface ICharacter {
     };
   };
   name: string;
-  name_kanji: string;
+  name_kanji: string | null;
   nicknames: string[];
   favorites: number;
-  about: string;
+  about: string | null;
 }
