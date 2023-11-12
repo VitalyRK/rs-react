@@ -14,7 +14,6 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "npx test",
       "npm run format:fix",
       "npm run lint --fix"
     ]

@@ -1,4 +1,4 @@
-export const baseUrl = 'https://api.jikan.moe/v4/characters';
+const baseUrl = 'https://api.jikan.moe/v4/characters';
 export const getCharacters = async (query?: string, limit = 10, page = 1) => {
   const url = query
     ? `${baseUrl}?limit=${limit}&page=${page}&q=${query}`
