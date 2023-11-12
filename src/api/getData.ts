@@ -8,7 +8,6 @@ export const getCharacters = async (query?: string, limit = 10, page = 1) => {
   });
 
   const data = await response;
-  console.log(data);
   return data.json();
 };
 
