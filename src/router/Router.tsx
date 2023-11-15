@@ -1,13 +1,21 @@
 import { createBrowserRouter } from 'react-router-dom';
+
 import Main from '../pages/main/Main';
 import Layout from '../components/layout/Layout';
 import NotFound from '../pages/not-found/NotFound';
 import DetailPage from '../pages/detail-page/DetailPage';
+import ErrorBoundary from '../helpers/ErrorBoundary';
+import ErrorPage from '../pages/error-page/ErrorPage';
+import { AppProvider } from '../providers/AppProvider';
 
-const router = createBrowserRouter([
+export const routes = [
   {
     path: '/',
-    element: <Layout />,
+    element: (
+      <AppProvider characters={undefined}>
+        <Layout />
+      </AppProvider>
+    ),
     children: [
       {
         path: '/',
@@ -37,6 +45,11 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+].map((route) => ({
+  ...route,
+  element: (
+    <ErrorBoundary fallback={<ErrorPage />}>{route.element}</ErrorBoundary>
+  ),
+}));
 
-export default router;
+export const router = createBrowserRouter(routes);

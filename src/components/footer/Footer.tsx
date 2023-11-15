@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import styles from './index.module.scss';
 import GitHubSVG from './GitHubSVG';
+import ErrorButton from '../error-button.tsx/ErrorButton';
 
 function Footer() {
   return (
@@ -13,6 +14,7 @@ function Footer() {
         <GitHubSVG />
         <span>Visit My GitHub</span>
       </NavLink>
+      <ErrorButton />
     </footer>
   );
 }

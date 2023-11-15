@@ -10,10 +10,10 @@ function SearchingResults() {
   return (
     <section className={styles.searching__results}>
       <div className={`container ${styles.searching__results__container}`}>
-        <p>Total results: {paginationData?.items.total}</p>
+        <p role="total">Total results: {paginationData?.items.total}</p>
 
         <div className={styles.searching__results__box}>
-          {characters === undefined ? (
+          {characters?.length === 0 ? (
             <>
               <img
                 className={styles.searching__results__box__img}
@@ -34,7 +34,11 @@ function SearchingResults() {
               {characters &&
                 characters.map((character, id) => {
                   return (
-                    <CharacterCart key={`cart-${id}`} character={character} />
+                    <CharacterCart
+                      data-testid={'list-item'}
+                      key={`cart-${id}`}
+                      character={character}
+                    />
                   );
                 })}
             </>

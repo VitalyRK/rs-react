@@ -12,6 +12,8 @@ type TypeSetState<T> = Dispatch<SetStateAction<T>>;
 
 type AppProviderProps = {
   children: ReactNode;
+  paginationData?: IPagination;
+  characters?: ICharacter[] | null;
 };
 
 interface IAppContext {
@@ -49,11 +51,13 @@ export const AppProvider = (props: AppProviderProps) => {
     localStorage.getItem('LOCAL_LAST_SEARCH_QUERY')
   );
 
-  const [characters, setCharacters] = useState<ICharacter[] | null>(null);
-  const [paginationData, setPaginationData] = useState<IPagination | null>(
-    null
+  const [characters, setCharacters] = useState<ICharacter[] | null>(
+    props.characters || null
   );
-  const [loading, setLoading] = useState<boolean>(false);
+  const [paginationData, setPaginationData] = useState<IPagination | null>(
+    props.paginationData || null
+  );
+  const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 

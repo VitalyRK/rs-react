@@ -20,6 +20,7 @@ function PaginationElement() {
   return (
     <div className={styles.pagination__container}>
       <ButtonPagination
+        data-testid={'test-pagination-prev'}
         value="&lt;"
         inActive={page === 1}
         handleControlToPage={() => {
