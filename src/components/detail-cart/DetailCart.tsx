@@ -9,7 +9,10 @@ type DetailCartProps = {
 function DetailCart(props: DetailCartProps) {
   return (
     <>
-      <div className={styles.detail__page__box}>
+      <div
+        className={styles.detail__page__box}
+        data-testid={`test-${props.character.mal_id}`}
+      >
         <p className={styles.detail__page__text}>
           ID: {props.character.mal_id}
         </p>

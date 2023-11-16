@@ -18,6 +18,7 @@ function CharacterCart(props: CharacterCartProps) {
       }
       <h3 className={styles.character__box__name}>{props.character.name}</h3>
       <NavLink
+        data-testid={`test-${props.character.mal_id}`}
         className={styles.character__box__link}
         to={`/detail/${props.character.mal_id}`}
       >
