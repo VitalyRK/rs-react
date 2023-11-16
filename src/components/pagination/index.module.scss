@@ -1,0 +1,10 @@
+.pagination__container {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  &__dots {
+    margin: 0 4px;
+  }
+}
