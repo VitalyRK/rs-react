@@ -1,7 +1,9 @@
 import { Component } from 'react';
+
+import vader from '@/assets/vader.avif';
+import { ICharacter } from '@/helpers/Types';
+
 import styles from './index.module.scss';
-import { ICharacter } from '../../pages/main/Main';
-import vader from '../../assets/vader.avif';
 
 type CharacterCartProps = {
   character: ICharacter;

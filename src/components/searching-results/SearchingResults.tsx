@@ -1,8 +1,10 @@
 import { Component } from 'react';
+
+import nothingFound from '@/assets/yoda.webp';
+import CharacterCart from '@/components/character-cart/CharacterCart';
+import { ICharacter } from '@/helpers/Types';
+
 import styles from './index.module.scss';
-import { ICharacter } from '../../pages/main/Main';
-import CharacterCart from '../character-cart/CharacterCart';
-import nothingFound from '../../assets/yoda.webp';
 
 type SearchProps = {
   people: ICharacter[];

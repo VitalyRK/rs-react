@@ -1,16 +1,18 @@
 import { Component } from 'react';
-import styles from './index.module.scss';
-import { findCharacter } from '../../api/getData';
-import img from '../../assets/img.png';
-import { ICharacter } from '../../pages/main/Main';
 
-export interface ISearchState {
+import { findCharacter } from '@/api/getData';
+import img from '@/assets/img.png';
+import { ICharacter } from '@/helpers/Types';
+
+import styles from './index.module.scss';
+
+interface ISearchState {
   query: string | null;
 }
 
 type SearchBarProps = {
-  stateChange: (data: ICharacter[] | null) => void;
-  loading: (value: boolean) => void;
+  setCharacters: (data: ICharacter[] | null) => void;
+  setIsLoading: (value: boolean) => void;
 };
 
 class SearchBar extends Component<SearchBarProps> {
@@ -25,29 +27,19 @@ class SearchBar extends Component<SearchBarProps> {
   };
 
   getData = async () => {
-    if (this.state.query !== null && this.state.query !== '') {
-      localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', this.state.query);
-    }
-
     if (this.state.query !== null) {
-      this.props.stateChange(null);
-      this.props.loading(true);
+      localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', this.state.query);
+      this.props.setCharacters(null);
+      this.props.setIsLoading(true);
       await findCharacter(this.state.query).then((data) => {
-        this.props.stateChange(data.results);
-        this.props.loading(false);
+        this.props.setCharacters(data.results);
+        this.props.setIsLoading(false);
       });
     }
   };
 
-  handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  handleSubmit = async () => {
     this.getData();
-  };
-
-  handlePress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      this.getData();
-    }
   };
 
   render() {
@@ -56,7 +48,10 @@ class SearchBar extends Component<SearchBarProps> {
         <section className={styles.search__bar}>
           <div className={`container ${styles.search__bar__container}`}>
             <h3 className={styles.search__bar__logo}>Best Logo</h3>
-            <div className={styles.search__bar__form}>
+            <form
+              onSubmit={this.handleSubmit}
+              className={styles.search__bar__form}
+            >
               <input
                 type="text"
                 name="query"
@@ -65,16 +60,14 @@ class SearchBar extends Component<SearchBarProps> {
                 placeholder="Search for the characters..."
                 required
                 onChange={this.handleQueryChange}
-                onKeyDown={this.handlePress}
               />
               <button
                 className={styles.search__bar__form__button}
-                onClick={this.handleClick}
                 type="submit"
               >
                 Clack!
               </button>
-            </div>
+            </form>
           </div>
           <h4 className="container primary__title">
             Search for a character by name
