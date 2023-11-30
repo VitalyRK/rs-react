@@ -1,10 +1,12 @@
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import styles from './index.module.scss';
 import { useEffect, useState } from 'react';
-import { getCharacterById } from '../../api/getData';
-import { ICharacter } from '../../helpers/Types';
-import spinner from '../../assets/spinner.gif';
-import DetailCart from '../../components/detail-cart/DetailCart';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
+
+import { getCharacterById } from '@/api/getData';
+import spinner from '@/assets/spinner.gif';
+import DetailCart from '@/components/detail-cart/DetailCart';
+import { ICharacter } from '@/helpers/Types';
+
+import styles from './index.module.scss';
 
 function DetailPage() {
   const params = useParams();

@@ -1,7 +1,8 @@
-import { IPaginationProps } from '../../helpers/Types';
+import { IPaginationProps } from '@/helpers/Types';
+
 import ButtonPagination from './ButtonPagination';
-import { getArrayValuesForPagination } from './LogicOfProcessingData';
 import styles from './index.module.scss';
+import { getArrayValuesForPagination } from './LogicOfProcessingData';
 
 type PaginationElementProps = {
   paginatiomParams: IPaginationProps;

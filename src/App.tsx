@@ -1,14 +1,11 @@
-import './styles/global.scss';
-import ErrorBoundary from './helpers/ErrorBoundary';
 import { RouterProvider } from 'react-router-dom';
-import router from './router/Router';
+
+import { router } from './router/Router';
+
+import './styles/global.scss';
 
 function App() {
-  return (
-    <ErrorBoundary>
-      <RouterProvider router={router} />
-    </ErrorBoundary>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

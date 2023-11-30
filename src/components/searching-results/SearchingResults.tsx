@@ -1,8 +1,9 @@
+import nothingFound from '@/assets/simpdons.svg';
+import CharacterCart from '@/components/character-cart/CharacterCart';
+import PaginationElement from '@/components/pagination/PaginationElement';
+import { ICharacter, IPagination, IPaginationProps } from '@/helpers/Types';
+
 import styles from './index.module.scss';
-import CharacterCart from '../character-cart/CharacterCart';
-import nothingFound from '../../assets/simpdons.svg';
-import { ICharacter, IPagination, IPaginationProps } from '../../helpers/Types';
-import PaginationElement from '../pagination/PaginationElement';
 
 type SearchProps = {
   characters: ICharacter[];

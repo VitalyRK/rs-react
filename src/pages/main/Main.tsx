@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import SearchBar from '../../components/search-bar/SearchBar';
-import SearchingResults from '../../components/searching-results/SearchingResults';
-import spinner from '../../assets/spinner.gif';
 import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
+
+import { getCharacters } from '@/api/getData';
+import spinner from '@/assets/spinner.gif';
+import SearchBar from '@/components/search-bar/SearchBar';
+import SearchingResults from '@/components/searching-results/SearchingResults';
+import { ICharacter, IPagination, IPaginationProps } from '@/helpers/Types';
+
 import styles from './index.module.scss';
-import { ICharacter, IPagination, IPaginationProps } from '../../helpers/Types';
-import { getCharacters } from '../../api/getData';
 
 export interface ISearchState {
   query: string | null;
@@ -130,9 +132,9 @@ function Main() {
   return (
     <>
       <SearchBar
-        loading={handleLoadingChange}
-        stateChange={handleStateChange}
-        stateLimit={handleLimitChange}
+        setIsLoading={handleLoadingChange}
+        setCharacters={handleStateChange}
+        setLimit={handleLimitChange}
         handleInputValueChange={handleInputValueChange}
         queryUrl={queryUrl}
       />

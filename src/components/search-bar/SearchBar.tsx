@@ -1,14 +1,16 @@
-import styles from './index.module.scss';
-import { ICharacter } from '../../helpers/Types';
 import { useState } from 'react';
-import { getCharacters } from '../../api/getData';
 import { NavLink } from 'react-router-dom';
+
+import { getCharacters } from '@/api/getData';
+import { ICharacter } from '@/helpers/Types';
+
+import styles from './index.module.scss';
 import LimitElement from './LimitElement';
 
 type SearchBarProps = {
-  stateChange: (data: ICharacter[] | null) => void;
-  stateLimit: (value: number) => void;
-  loading: (value: boolean) => void;
+  setCharacters: (data: ICharacter[] | null) => void;
+  setLimit: (value: number) => void;
+  setIsLoading: (value: boolean) => void;
   handleInputValueChange: (value: string) => void;
   queryUrl: string | null;
 };
@@ -28,29 +30,22 @@ function SearchBar(props: SearchBarProps) {
     }
 
     if (query !== null) {
-      props.stateChange(null);
-      props.loading(true);
+      props.setCharacters(null);
+      props.setIsLoading(true);
       props.handleInputValueChange(query);
       await getCharacters(query)
         .then((resp) => {
-          props.stateChange(resp.data);
-          props.loading(false);
+          props.setCharacters(resp.data);
+          props.setIsLoading(false);
         })
         .catch(() => {
-          props.stateChange(null);
+          props.setCharacters(null);
         });
     }
   };
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     getData();
-  };
-
-  const handlePress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      getData();
-    }
   };
 
   return (
@@ -60,7 +55,7 @@ function SearchBar(props: SearchBarProps) {
           <NavLink target="_blank" to={'https://jikan.moe/'}>
             <h1 className={styles.search__bar__logo}>Jikan API</h1>
           </NavLink>
-          <div className={styles.search__bar__form}>
+          <form onSubmit={handleSubmit} className={styles.search__bar__form}>
             <input
               type="text"
               name="query"
@@ -69,20 +64,15 @@ function SearchBar(props: SearchBarProps) {
               placeholder="Search for the characters..."
               required
               onChange={handleQueryChange}
-              onKeyDown={handlePress}
             />
-            <button
-              className={styles.search__bar__form__button}
-              onClick={handleClick}
-              type="submit"
-            >
+            <button className={styles.search__bar__form__button} type="submit">
               Clack!
             </button>
-          </div>
+          </form>
         </div>
         <div className={`container ${styles.search__bar__container}`}>
           <h4 className="primary__title">Search for a character by name</h4>
-          <LimitElement stateLimit={props.stateLimit} />
+          <LimitElement stateLimit={props.setLimit} />
         </div>
       </section>
     </>

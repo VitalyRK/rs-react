@@ -1,6 +1,8 @@
 import { NavLink } from 'react-router-dom';
+
+import { ICharacter } from '@/helpers/Types';
+
 import styles from './index.module.scss';
-import { ICharacter } from '../../helpers/Types';
 
 type DetailCartProps = {
   character: ICharacter;

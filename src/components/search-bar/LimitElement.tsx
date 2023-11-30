@@ -6,6 +6,7 @@ function LimitElement(props: LimitElementProps) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     props.stateLimit(+event.target.value);
   };
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
       <span>Select item limit on page</span>

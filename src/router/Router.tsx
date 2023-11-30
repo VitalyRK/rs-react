@@ -1,10 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Main from '../pages/main/Main';
-import Layout from '../components/layout/Layout';
-import NotFound from '../pages/not-found/NotFound';
-import DetailPage from '../pages/detail-page/DetailPage';
 
-const router = createBrowserRouter([
+import Layout from '@/components/layout/Layout';
+import ErrorBoundary from '@/helpers/ErrorBoundary';
+import DetailPage from '@/pages/detail-page/DetailPage';
+import ErrorPage from '@/pages/error-page/ErrorPage';
+import Main from '@/pages/main/Main';
+import NotFound from '@/pages/not-found/NotFound';
+
+export const routes = [
   {
     path: '/',
     element: <Layout />,
@@ -37,6 +40,11 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+].map((route) => ({
+  ...route,
+  element: (
+    <ErrorBoundary fallback={<ErrorPage />}>{route.element}</ErrorBoundary>
+  ),
+}));
 
-export default router;
+export const router = createBrowserRouter(routes);
