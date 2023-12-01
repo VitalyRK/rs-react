@@ -15,7 +15,7 @@ function SearchingResults(props: SearchProps) {
   return (
     <section className={styles.searching__results}>
       <div className={`container ${styles.searching__results__container}`}>
-        <p>
+        <p className={styles.searching__results__total}>
           Total results:{' '}
           {props.paginationData !== undefined &&
             props.paginationData.items.total}

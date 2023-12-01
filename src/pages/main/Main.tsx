@@ -64,7 +64,7 @@ function Main() {
       });
     } else if (queryLocal !== null) {
       query = queryLocal;
-      if (queryLocal === '') {
+      if (queryLocal === ' ') {
         setSearchParams({
           limit: limit.toString(),
           page: page.toString(),
@@ -92,18 +92,16 @@ function Main() {
           if (resp.status === '429') {
             setLoading(false);
             setError('Too many requests in a short period of time');
-            console.log(error);
             throw new Error(resp.message);
-          }
-          if (resp.status === 500) {
+          } else if (resp.status === 500) {
             setLoading(false);
             setError('Search term too short!');
             throw new Error(resp.message);
+          } else {
+            setCharacters(resp.data);
+            setPaginationData(resp.pagination);
+            setLoading(false);
           }
-          console.log(resp);
-          setCharacters(resp.data);
-          setPaginationData(resp.pagination);
-          setLoading(false);
         })
         .catch((e) => {
           console.log(e);
@@ -111,11 +109,11 @@ function Main() {
     })();
   }, [queryUrl, queryLocal, page, limit, setSearchParams]);
 
-  const handleStateChange = (data: ICharacter[] | null) => {
+  const handleSetCharacters = (data: ICharacter[] | null) => {
     setCharacters(data);
   };
 
-  const handleLoadingChange = (value: boolean) => {
+  const handleSetIsLoading = (value: boolean) => {
     setLoading(value);
   };
 
@@ -132,13 +130,13 @@ function Main() {
   return (
     <>
       <SearchBar
-        setIsLoading={handleLoadingChange}
-        setCharacters={handleStateChange}
+        setIsLoading={handleSetIsLoading}
+        setCharacters={handleSetCharacters}
         setLimit={handleLimitChange}
         handleInputValueChange={handleInputValueChange}
         queryUrl={queryUrl}
       />
-      {error && <h3>{error}</h3>}
+      {error && <h3 className={styles.title__error}>{error}</h3>}
 
       <div className={`container ${styles.main__container}`}>
         {loading ? (

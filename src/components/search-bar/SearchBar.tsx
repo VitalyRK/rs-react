@@ -27,14 +27,12 @@ function SearchBar(props: SearchBarProps) {
   const getData = async () => {
     if (query !== null) {
       localStorage.setItem('LOCAL_LAST_SEARCH_QUERY', query);
-    }
-
-    if (query !== null) {
       props.setCharacters(null);
       props.setIsLoading(true);
       props.handleInputValueChange(query);
       await getCharacters(query)
         .then((resp) => {
+          console.log(resp);
           props.setCharacters(resp.data);
           props.setIsLoading(false);
         })
