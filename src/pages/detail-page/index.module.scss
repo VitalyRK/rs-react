@@ -1,0 +1,90 @@
+.detail__page {
+  position: relative;
+  width: 50%;
+  height: 70vh;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__loader {
+    margin-top: 98px;
+    height: 64px;
+  }
+
+  &__empty {
+    margin-top: 118px;
+    height: 64px;
+  }
+
+  &__background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 3;
+  }
+
+  &__container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &__container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 100vw;
+  }
+
+  &__container::-webkit-scrollbar-thumb {
+    background: $primary-color-green;
+    border-radius: 100vw;
+  }
+
+  &__container {
+    position: fixed;
+    min-height: 300px;
+    max-width: 350px;
+    max-height: 600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    padding: 20px 50px;
+    background-color: #fff;
+    // transform: translateX(1500px);
+    // animation: 1s slideRight ease-out forwards 0.2s;
+    // opacity: 0;
+    border: 2px solid $color-text-gray;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    z-index: 10;
+  }
+
+  &__button {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    top: 1vw;
+    right: 1vw;
+    font-size: 22px;
+    color: $color-text-gray;
+    border-radius: 50%;
+    border: 2px solid $color-text-gray;
+    transition: all 0.3s ease;
+    z-index: 20;
+    &:hover {
+      border-color: transparent;
+      color: aliceblue;
+      background-color: $primary-color-green;
+    }
+  }
+}
+
+@keyframes slideRight {
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}

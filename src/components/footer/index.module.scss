@@ -1,0 +1,24 @@
+.footer {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  text-align: center;
+  color: $color-text-gray;
+  justify-content: space-around;
+  &__link__github {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: $color-text-gray;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: #fff;
+      color: $primary-color-mint;
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+  }
+}
